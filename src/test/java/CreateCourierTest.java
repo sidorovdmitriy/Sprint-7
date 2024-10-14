@@ -27,8 +27,12 @@ public class CreateCourierTest {
     @Description("Post-запрос к /api/v1/courier")
     public void createPositiveTest() {
         courier = DataGenerator.getRandom();
-        ValidatableResponse response = courierClient.create(courier);
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courier));
+        Courier courierTest = new Courier(DataGenerator.getRandom().getFirstName(),
+                DataGenerator.getRandom().getLogin(),
+                DataGenerator.getRandom().getPassword());
+        ValidatableResponse response = courierClient.create(courierTest);
+
+        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courierTest));
 
         int loginStatusCode = loginResponse.extract().statusCode();
         assertEquals(SC_OK, loginStatusCode);
@@ -54,7 +58,7 @@ public class CreateCourierTest {
         courierClient.create(courierTest);
         ValidatableResponse response = courierClient.create(courierTest);
         ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courierTest));
-        courierId = loginResponse.extract().path("id");
+       // courierId = loginResponse.extract().path("id");
 
         String bodyAnswer = response.extract().path("message");
         assertEquals("Этот логин уже используется. Попробуйте другой.", bodyAnswer);
@@ -103,7 +107,7 @@ public class CreateCourierTest {
                 DataGenerator.getRandom().getLogin(),
                 DataGenerator.getRandom().getPassword());
         ValidatableResponse response = courierClient.create(courierTest);
-        courierId = courierClient.login(CourierCredentials.from(courierTest)).extract().path("id");
+       // courierId = courierClient.login(CourierCredentials.from(courierTest)).extract().path("id");
 
         int statusCode = response.extract().statusCode();
         assertEquals(SC_CREATED, statusCode);

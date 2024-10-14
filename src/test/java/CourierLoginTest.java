@@ -42,9 +42,8 @@ public class CourierLoginTest {
     @DisplayName("Авторизация с пустым логином")
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierEmptyLoginTest() {
-        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("", courier.getPassword()));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
-
+        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("", ""));
+       // courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_BAD_REQUEST, statusCode);
 
@@ -56,8 +55,8 @@ public class CourierLoginTest {
     @DisplayName("Авторизация с пустым паролем")
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierEmptyPasswordTest() {
-        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials(courier.getLogin(), ""));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
+        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("PETR1234", ""));
+      //  courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
 
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_BAD_REQUEST, statusCode);
@@ -71,7 +70,7 @@ public class CourierLoginTest {
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierNullLoginTest() {
         ValidatableResponse loginResponse = courierClient.login(new CourierCredentials(null, courier.getPassword()));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
+       // courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
 
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_BAD_REQUEST, statusCode);
@@ -84,8 +83,8 @@ public class CourierLoginTest {
     @DisplayName("Авторизация с некорректным логином")
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierWrongLoginTest() {
-        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("PETR1234", courier.getPassword()));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
+        ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("PETR1234", ""));
+      // courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
 
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_NOT_FOUND, statusCode);
@@ -99,7 +98,7 @@ public class CourierLoginTest {
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierWrongPasswordTest() {
         ValidatableResponse loginResponse = courierClient.login(new CourierCredentials(courier.getLogin(), "passw1234"));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
+       // courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
 
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_NOT_FOUND, statusCode);
@@ -113,7 +112,7 @@ public class CourierLoginTest {
     @Description("Post-запрос к /api/v1/courier/login")
     public void courierThatNotExists() {
         ValidatableResponse loginResponse = courierClient.login(new CourierCredentials("IvanD1234", "Paasw123"));
-        courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
+      //  courierId = courierClient.login(CourierCredentials.from(courier)).extract().path("id");
 
         int statusCode = loginResponse.extract().statusCode();
         assertEquals(SC_NOT_FOUND, statusCode);
