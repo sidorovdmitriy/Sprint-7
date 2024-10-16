@@ -15,6 +15,9 @@ public class CreateCourierTest {
     @Before
     public void setUp() {
         courierClient = new CourierClient();
+        courier = new Courier(DataGenerator.getRandom().getFirstName(),
+                DataGenerator.getRandom().getLogin(),
+                DataGenerator.getRandom().getPassword());
     }
 
     @After
@@ -26,20 +29,15 @@ public class CreateCourierTest {
     @DisplayName("Успешное создание курьера")
     @Description("Post-запрос к /api/v1/courier")
     public void createPositiveTest() {
-        courier = DataGenerator.getRandom();
-        Courier courierTest = new Courier(DataGenerator.getRandom().getFirstName(),
-                DataGenerator.getRandom().getLogin(),
-                DataGenerator.getRandom().getPassword());
-        ValidatableResponse response = courierClient.create(courierTest);
+        ValidatableResponse response = courierClient.create(courier);
 
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courierTest));
+        ValidatableResponse loginResponse = courierClient.login(courier.getLogin(),courier.getPassword());
 
         int loginStatusCode = loginResponse.extract().statusCode();
         assertEquals(SC_OK, loginStatusCode);
 
         int statusCode = response.extract().statusCode();
         assertEquals(SC_CREATED, statusCode);
-
 
         boolean isCreated = response.extract().path("ok");
         assertTrue(isCreated);
@@ -52,13 +50,8 @@ public class CreateCourierTest {
     @DisplayName("Создание курьера с теми же кредами")
     @Description("Post-запрос к /api/v1/courier")
     public void createTwoSameCouriersTest() {
-        Courier courierTest = new Courier(DataGenerator.getRandom().getFirstName(),
-                DataGenerator.getRandom().getLogin(),
-                DataGenerator.getRandom().getPassword());
-        courierClient.create(courierTest);
-        ValidatableResponse response = courierClient.create(courierTest);
-        ValidatableResponse loginResponse = courierClient.login(CourierCredentials.from(courierTest));
-       // courierId = loginResponse.extract().path("id");
+        courierClient.create(courier);
+        ValidatableResponse response = courierClient.create(courier);
 
         String bodyAnswer = response.extract().path("message");
         assertEquals("Этот логин уже используется. Попробуйте другой.", bodyAnswer);
@@ -107,7 +100,6 @@ public class CreateCourierTest {
                 DataGenerator.getRandom().getLogin(),
                 DataGenerator.getRandom().getPassword());
         ValidatableResponse response = courierClient.create(courierTest);
-       // courierId = courierClient.login(CourierCredentials.from(courierTest)).extract().path("id");
 
         int statusCode = response.extract().statusCode();
         assertEquals(SC_CREATED, statusCode);

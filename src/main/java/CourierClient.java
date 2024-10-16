@@ -5,12 +5,14 @@ import static io.restassured.RestAssured.given;
 public class CourierClient extends Client {
 
     private static final String COURIER_PATH = "/api/v1/courier/";
-
     @Step("Логин курьера")
-    public ValidatableResponse login(CourierCredentials credentials) {
+    public ValidatableResponse login(String name, String password) {
         return given()
                 .spec(getSpec())
-                .body(credentials)
+                .body("{\n" +
+                        "   \"login\": \""+name+"\",\n" +
+                        "   \"password\": \""+password+"\"\n" +
+                        "}")
                 .when()
                 .post(COURIER_PATH + "login")
                 .then();
